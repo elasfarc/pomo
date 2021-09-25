@@ -29,7 +29,8 @@ const useTimer = ({ initialState }) => {
 
   const [state, dispatch] = React.useReducer(timerReducer, initialState);
   const intervalRef = React.useRef();
-  const operate = () => {
+
+  const operate = React.useCallback(() => {
     if (state.isRunning) {
       clearInterval(intervalRef.current);
       dispatch({ type: actionTypes.PAUSE });
@@ -38,11 +39,12 @@ const useTimer = ({ initialState }) => {
         () => dispatch({ type: actionTypes.RUN }),
         1000
       );
-  };
-  const restart = () => {
+  }, [state.isRunning]);
+
+  const restart = React.useCallback(() => {
     clearInterval(intervalRef.current);
     dispatch({ type: actionTypes.RESTART });
-  };
+  }, []);
 
   return { state, dispatch, operate, restart };
 };
