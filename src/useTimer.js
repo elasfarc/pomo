@@ -6,17 +6,18 @@ const actionTypes = {
   PAUSE: "pause",
   SET_DURATION: "setDuration",
 };
-
 const useTimer = ({ duration = 25 }) => {
   const timerReducer = (state, { type, payload }) => {
     switch (type) {
       case actionTypes.RUN:
-        return {
-          ...state,
-          minutes: state.seconds === 0 ? state.minutes - 1 : state.minutes,
-          seconds: state.seconds === 0 ? 59 : state.seconds - 1,
-          isRunning: true,
-        };
+        return state.seconds === 0 && state.minutes === 0
+          ? { ...state, isRunning: false, isDone: true }
+          : {
+              ...state,
+              minutes: state.seconds === 0 ? state.minutes - 1 : state.minutes,
+              seconds: state.seconds === 0 ? 59 : state.seconds - 1,
+              isRunning: true,
+            };
       case actionTypes.RESTART:
         return { ...state, ...initialState };
 
@@ -37,6 +38,7 @@ const useTimer = ({ duration = 25 }) => {
     minutes: durationRef.current,
     seconds: 0,
     isRunning: false,
+    isDone: false,
   };
   const [state, dispatch] = React.useReducer(timerReducer, initialState);
   const intervalRef = React.useRef();
@@ -62,6 +64,10 @@ const useTimer = ({ duration = 25 }) => {
     dispatch({ type: actionTypes.SET_DURATION, payload: { newDuration } });
   }, []);
 
+  React.useEffect(() => {
+    console.log("isDone?!!!!!");
+    if (state.isDone) clearInterval(intervalRef.current);
+  }, [state.isDone]);
   console.log("🚀 ~ file: useTimer.js ~ line 50 ~ useTimer ~ state", state);
   return { state, dispatch, operate, restart, setDuration };
 };
