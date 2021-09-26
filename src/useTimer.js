@@ -7,7 +7,7 @@ const actionTypes = {
   SET_DURATION: "setDuration",
 };
 
-const useTimer = ({ initialState }) => {
+const useTimer = ({ duration = 25 }) => {
   const timerReducer = (state, { type, payload }) => {
     switch (type) {
       case actionTypes.RUN:
@@ -24,13 +24,20 @@ const useTimer = ({ initialState }) => {
         return { ...state, isRunning: false };
 
       case actionTypes.SET_DURATION:
-        return { ...initialState, minutes: payload.duration };
+        const { newDuration } = payload;
+        return { ...initialState, minutes: newDuration };
 
       default:
         console.error("undefined type");
     }
   };
+  const durationRef = React.useRef(duration);
 
+  const initialState = {
+    minutes: durationRef.current,
+    seconds: 0,
+    isRunning: false,
+  };
   const [state, dispatch] = React.useReducer(timerReducer, initialState);
   const intervalRef = React.useRef();
 
@@ -50,8 +57,9 @@ const useTimer = ({ initialState }) => {
     dispatch({ type: actionTypes.RESTART });
   }, []);
 
-  const setDuration = React.useCallback((duration) => {
-    dispatch({ type: actionTypes.SET_DURATION, payload: { duration } });
+  const setDuration = React.useCallback((newDuration) => {
+    durationRef.current = newDuration;
+    dispatch({ type: actionTypes.SET_DURATION, payload: { newDuration } });
   }, []);
 
   console.log("🚀 ~ file: useTimer.js ~ line 50 ~ useTimer ~ state", state);

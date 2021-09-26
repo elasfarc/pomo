@@ -1,23 +1,23 @@
 import React from "react";
 import { useTimer } from "../useTimer";
 
-const Timer = ({ duration = 25 }) => {
+const Timer = ({ duration }) => {
   console.log("howmany/////////");
-  const initialState = { minutes: duration, seconds: 0, isRunning: false };
+
   const [editMode, setEditMode] = React.useState(false);
   const {
     state: { minutes, seconds, isRunning },
     operate,
     restart,
     setDuration,
-  } = useTimer({ initialState });
+  } = useTimer({ duration });
 
   const inputRef = React.useRef();
 
   const handleModeChange = (e) => {
     const { type } = e;
     if (type === "keydown" && e.key !== "Enter") return;
-    if (editMode) setDuration(e.target.value);
+    if (editMode) setDuration(Number(e.target.value));
     setEditMode((mode) => !mode);
   };
   React.useLayoutEffect(() => {
