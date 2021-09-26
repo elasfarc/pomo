@@ -13,6 +13,7 @@ const Timer = ({ duration }) => {
   } = useTimer({ duration });
 
   const inputRef = React.useRef();
+  const [inputDuration, setInputDuration] = React.useState(minutes);
 
   const handleModeChange = (e) => {
     const { type } = e;
@@ -30,6 +31,8 @@ const Timer = ({ duration }) => {
           <input
             type="number"
             ref={inputRef}
+            value={inputDuration}
+            onChange={({ target: { value } }) => setInputDuration(value)}
             onBlur={handleModeChange}
             onKeyDown={handleModeChange}
           />
