@@ -17,7 +17,7 @@ const Timer = ({ duration }) => {
 
   const handleModeChange = (e) => {
     const { type } = e;
-    if (type === "keydown" && e.key !== "Enter") return;
+    if (isRunning || (type === "keydown" && e.key !== "Enter")) return;
     if (editMode) setDuration(Number(e.target.value));
     setEditMode((mode) => !mode);
   };
