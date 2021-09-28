@@ -10,16 +10,13 @@ const useTimer = ({ duration = 0 }) => {
   const timerReducer = (state, { type, payload }) => {
     switch (type) {
       case actionTypes.RUN:
-        return state.seconds === 0 && state.minutes === 0
+        return duration === 0
           ? { initialState }
           : {
               ...state,
-              minutes: state.seconds === 0 ? state.minutes - 1 : state.minutes,
-              seconds: state.seconds === 0 ? 59 : state.seconds - 1,
-              isRunning:
-                state.seconds - 1 === 0 && state.minutes === 0 ? false : true,
-              isDone:
-                state.seconds - 1 === 0 && state.minutes === 0 ? true : false,
+              duration: state.duration - 1,
+              isRunning: state.duration - 1 === 0 ? false : true,
+              isDone: state.duration - 1 === 0 ? true : false,
             };
       case actionTypes.RESTART:
         return { ...state, ...initialState };
@@ -29,7 +26,7 @@ const useTimer = ({ duration = 0 }) => {
 
       case actionTypes.SET_DURATION:
         const { newDuration } = payload;
-        return { ...initialState, minutes: newDuration };
+        return { ...initialState, duration: newDuration };
 
       default:
         console.error("undefined type");
@@ -38,8 +35,7 @@ const useTimer = ({ duration = 0 }) => {
   const durationRef = React.useRef(duration);
 
   const initialState = {
-    minutes: durationRef.current,
-    seconds: 0,
+    duration,
     isRunning: false,
     isDone: false,
   };

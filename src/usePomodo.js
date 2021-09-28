@@ -2,7 +2,7 @@ import React from "react";
 import { useTimer } from "./useTimer";
 
 const usePomodo = ({ focus = 25, shortBreak = 5, longBreak = 15 }) => {
-  const timerState = useTimer({ duration: focus });
+  const timerState = useTimer({ duration: focus * 60 });
   const {
     state: { isDone },
     setDuration,

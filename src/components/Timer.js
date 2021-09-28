@@ -6,7 +6,7 @@ const Timer = ({ focus, shortBreak, longBreak }) => {
   console.log("howmany/////////");
 
   const {
-    state: { minutes, seconds, isRunning },
+    state: { duration, isRunning },
     operate,
     restart,
     setDuration,
@@ -15,7 +15,7 @@ const Timer = ({ focus, shortBreak, longBreak }) => {
 
   const [editMode, setEditMode] = React.useState(false);
   const inputRef = React.useRef();
-  const [inputDuration, setInputDuration] = React.useState(minutes);
+  const [inputDuration, setInputDuration] = React.useState(duration);
 
   const handleModeChange = (e) => {
     const { type } = e;
@@ -40,9 +40,11 @@ const Timer = ({ focus, shortBreak, longBreak }) => {
           />
         ) : (
           <>
-            <span onClick={handleModeChange}>{minutes}</span>
+            <span onClick={handleModeChange}>
+              {parseInt(duration / 60, 10)}
+            </span>
             <span>:</span>
-            <span>{seconds}</span>
+            <span>{duration % 60}</span>
           </>
         )}
       </div>
