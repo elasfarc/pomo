@@ -35,7 +35,7 @@ const useTimer = ({ duration = 0 }) => {
   const durationRef = React.useRef(duration);
 
   const initialState = {
-    duration,
+    duration: durationRef.current,
     isRunning: false,
     isDone: false,
   };

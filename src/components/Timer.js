@@ -1,5 +1,4 @@
 import React from "react";
-// import { useTimer } from "../useTimer";
 import { usePomodo } from "../usePomodo";
 
 const Timer = ({ focus, shortBreak, longBreak }) => {
@@ -9,18 +8,20 @@ const Timer = ({ focus, shortBreak, longBreak }) => {
     state: { duration, isRunning },
     operate,
     restart,
-    setDuration,
     counter,
+    changePomodoSettings,
   } = usePomodo({ focus, shortBreak, longBreak });
 
+  const minutes = parseInt(duration / 60, 10);
+  const seconds = duration % 60;
   const [editMode, setEditMode] = React.useState(false);
   const inputRef = React.useRef();
-  const [inputDuration, setInputDuration] = React.useState(duration);
+  const [inputDuration, setInputDuration] = React.useState(minutes);
 
   const handleModeChange = (e) => {
     const { type } = e;
     if (isRunning || (type === "keydown" && e.key !== "Enter")) return;
-    if (editMode) setDuration(Number(e.target.value));
+    if (editMode) changePomodoSettings({ focus: Number(e.target.value) * 60 });
     setEditMode((mode) => !mode);
   };
   React.useLayoutEffect(() => {
@@ -40,11 +41,9 @@ const Timer = ({ focus, shortBreak, longBreak }) => {
           />
         ) : (
           <>
-            <span onClick={handleModeChange}>
-              {parseInt(duration / 60, 10)}
-            </span>
+            <span onClick={handleModeChange}>{minutes}</span>
             <span>:</span>
-            <span>{duration % 60}</span>
+            <span>{seconds}</span>
           </>
         )}
       </div>
