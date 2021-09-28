@@ -6,17 +6,20 @@ const actionTypes = {
   PAUSE: "pause",
   SET_DURATION: "setDuration",
 };
-const useTimer = ({ duration = 25 }) => {
+const useTimer = ({ duration = 0 }) => {
   const timerReducer = (state, { type, payload }) => {
     switch (type) {
       case actionTypes.RUN:
         return state.seconds === 0 && state.minutes === 0
-          ? { ...state, isRunning: false, isDone: true }
+          ? { initialState }
           : {
               ...state,
               minutes: state.seconds === 0 ? state.minutes - 1 : state.minutes,
               seconds: state.seconds === 0 ? 59 : state.seconds - 1,
-              isRunning: true,
+              isRunning:
+                state.seconds - 1 === 0 && state.minutes === 0 ? false : true,
+              isDone:
+                state.seconds - 1 === 0 && state.minutes === 0 ? true : false,
             };
       case actionTypes.RESTART:
         return { ...state, ...initialState };

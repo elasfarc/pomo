@@ -1,17 +1,19 @@
 import React from "react";
-import { useTimer } from "../useTimer";
+// import { useTimer } from "../useTimer";
+import { usePomodo } from "../usePomodo";
 
-const Timer = ({ duration }) => {
+const Timer = ({ focus, shortBreak, longBreak }) => {
   console.log("howmany/////////");
 
-  const [editMode, setEditMode] = React.useState(false);
   const {
     state: { minutes, seconds, isRunning },
     operate,
     restart,
     setDuration,
-  } = useTimer({ duration });
+    counter,
+  } = usePomodo({ focus, shortBreak, longBreak });
 
+  const [editMode, setEditMode] = React.useState(false);
   const inputRef = React.useRef();
   const [inputDuration, setInputDuration] = React.useState(minutes);
 
@@ -48,6 +50,7 @@ const Timer = ({ duration }) => {
         <button onClick={operate}>{isRunning ? "PAUSE" : "START"}</button>
         <button onClick={restart}>RESET</button>
       </div>
+      <div>{counter}</div>
     </div>
   );
 };
