@@ -1,6 +1,10 @@
 import React from "react";
 import { usePomodo } from "../usePomodo";
 
+function timeFormatter(v) {
+  return v.toLocaleString("en-us", { minimumIntegerDigits: 2 });
+}
+
 const Timer = ({ focus, shortBreak, longBreak }) => {
   console.log("howmany/////////");
 
@@ -41,9 +45,9 @@ const Timer = ({ focus, shortBreak, longBreak }) => {
           />
         ) : (
           <>
-            <span onClick={handleModeChange}>{minutes}</span>
+            <span onClick={handleModeChange}>{timeFormatter(minutes)}</span>
             <span>:</span>
-            <span>{seconds}</span>
+            <span>{timeFormatter(seconds)}</span>
           </>
         )}
       </div>
