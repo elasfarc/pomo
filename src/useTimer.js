@@ -10,14 +10,12 @@ const useTimer = ({ duration = 0 }) => {
   const timerReducer = (state, { type, payload }) => {
     switch (type) {
       case actionTypes.RUN:
-        return duration === 0
-          ? { initialState }
-          : {
-              ...state,
-              duration: state.duration - 1,
-              isRunning: state.duration - 1 === 0 ? false : true,
-              isDone: state.duration - 1 === 0 ? true : false,
-            };
+        return {
+          ...state,
+          duration: state.duration === 0 ? state.duration : state.duration - 1,
+          isRunning: state.duration - 1 === 0 ? false : true,
+          isDone: state.duration - 1 === 0 ? true : false,
+        };
       case actionTypes.RESTART:
         return { ...state, ...initialState };
 
