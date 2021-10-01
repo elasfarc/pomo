@@ -35,7 +35,7 @@ const useTimer = ({ duration = 0 }) => {
   const initialState = {
     duration: durationRef.current,
     isRunning: false,
-    isDone: false,
+    isDone: true,
   };
   const [state, dispatch] = React.useReducer(timerReducer, initialState);
   const intervalRef = React.useRef();

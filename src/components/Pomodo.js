@@ -1,5 +1,7 @@
 import React from "react";
-import { useTimer } from "./useTimer";
+import { useTimer } from "../useTimer";
+import PomodoSettings from "./PomodoSettings";
+import useDidMountEffect from "../useDidMountEffect";
 
 function formatTime(v) {
   return v.toLocaleString("en-us", { minimumIntegerDigits: 2 });
@@ -22,6 +24,11 @@ function pomodoReducer(state, action) {
           : state.completedTasks + 1,
         isBreak: !state.isBreak,
       };
+    case "changeIntervals":
+      return {
+        ...state,
+        intervals: action.payload.updatedIntervals,
+      };
 
     default:
       throw new Error("unknown pomodoReducer action type...");
@@ -35,22 +42,23 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
     intervals: { focus: t1, shortBreak: t2, longBreak: t3 },
   };
   const [settings, dispatch] = React.useReducer(pomodoReducer, pomodoSettings);
-
   const { intervals, completedTasks, isBreak } = settings;
+
   const {
     state: { duration, isRunning, isDone },
     operate,
     restart,
     setDuration,
   } = useTimer({ duration: intervals.focus });
-  const minutes = pipe(extractMinutes, formatTime);
-  const seconds = pipe(extractSeconds, formatTime);
+
+  useDidMountEffect(
+    React.useCallback(() => {
+      if (isDone) dispatch({ type: "changeMood" });
+    }, [isDone])
+  );
 
   React.useEffect(() => {
-    if (isDone) dispatch({ type: "changeMood" });
-  }, [isDone]);
-  React.useEffect(() => {
-    console.log(":(((((( :* :((((((");
+    if (!isDone) return;
     setDuration(
       !isBreak
         ? intervals.focus
@@ -64,8 +72,16 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
     intervals.longBreak,
     intervals.shortBreak,
     isBreak,
+    isDone,
     setDuration,
   ]);
+
+  const minutes = pipe(extractMinutes, formatTime);
+  const seconds = pipe(extractSeconds, formatTime);
+
+  const changeIntervals = React.useCallback((updatedIntervals) => {
+    dispatch({ type: "changeIntervals", payload: { updatedIntervals } });
+  }, []);
 
   return (
     <div className="container txt-center border-white">
@@ -79,6 +95,7 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
         <button onClick={restart}>STOP</button>
       </div>
       <div>{completedTasks}</div>
+      <PomodoSettings intervals={intervals} onSubmit={changeIntervals} />
     </div>
   );
 };
