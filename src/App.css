@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,44 @@
   to {
     transform: rotate(360deg);
   }
+} */
+@import url(//db.onlinewebfonts.com/c/cae9571407321e5d5e496ada719e9f63?family=Pixel);
+@import url(//db.onlinewebfonts.com/c/34b55cfd9c2021294011777c390c6162?family=CentralInlineW00-Regular);
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background-color: #6261fb;
+  font-family: "Pixel";
+  font-family: "CentralInlineW00-Regular";
+}
+#id {
+}
+.app {
+}
+.flex {
+  display: flex;
+}
+.container {
+  margin: 0 auto;
+  width: 80%;
+  max-width: 1200px;
+}
+.txt-center {
+  text-align: center;
+}
+
+.border-white {
+  border: 10px double white;
+}
+
+.timer {
+  padding: 5em;
+  color: white;
+}
+
+.timer__display {
+  font-size: 4vw;
+  letter-spacing: 10px;
+  line-height: 10rem;
 }

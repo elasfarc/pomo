@@ -33,29 +33,31 @@ const Timer = ({ focus, shortBreak, longBreak }) => {
   }, [editMode]);
   return (
     <div className="timer">
-      <div className="timer__display">
-        {editMode ? (
-          <input
-            type="number"
-            ref={inputRef}
-            value={inputDuration}
-            onChange={({ target: { value } }) => setInputDuration(value)}
-            onBlur={handleModeChange}
-            onKeyDown={handleModeChange}
-          />
-        ) : (
-          <>
-            <span onClick={handleModeChange}>{timeFormatter(minutes)}</span>
-            <span>:</span>
-            <span>{timeFormatter(seconds)}</span>
-          </>
-        )}
+      <div className="container txt-center border-white">
+        <div className="timer__display">
+          {editMode ? (
+            <input
+              type="number"
+              ref={inputRef}
+              value={inputDuration}
+              onChange={({ target: { value } }) => setInputDuration(value)}
+              onBlur={handleModeChange}
+              onKeyDown={handleModeChange}
+            />
+          ) : (
+            <>
+              <span onClick={handleModeChange}>{timeFormatter(minutes)}</span>
+              <span>:</span>
+              <span>{timeFormatter(seconds)}</span>
+            </>
+          )}
+        </div>
+        <div className="timer__control">
+          <button onClick={operate}>{isRunning ? "PAUSE" : "START"}</button>
+          <button onClick={restart}>RESET</button>
+        </div>
+        <div>{counter}</div>
       </div>
-      <div className="timer__control">
-        <button onClick={operate}>{isRunning ? "PAUSE" : "START"}</button>
-        <button onClick={restart}>RESET</button>
-      </div>
-      <div>{counter}</div>
     </div>
   );
 };
