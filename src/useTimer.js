@@ -30,7 +30,7 @@ const useTimer = ({ duration = 0 }) => {
         console.error("undefined type");
     }
   };
-  const durationRef = React.useRef(duration);
+  const durationRef = React.useRef(duration * 60);
 
   const initialState = {
     duration: durationRef.current,
@@ -51,14 +51,18 @@ const useTimer = ({ duration = 0 }) => {
       );
   }, [state.isRunning]);
 
+  const setDuration = React.useCallback((newDuration) => {
+    newDuration = newDuration * 60;
+    durationRef.current = newDuration;
+    dispatch({
+      type: actionTypes.SET_DURATION,
+      payload: { newDuration },
+    });
+  }, []);
+
   const restart = React.useCallback(() => {
     clearInterval(intervalRef.current);
     dispatch({ type: actionTypes.RESTART });
-  }, []);
-
-  const setDuration = React.useCallback((newDuration) => {
-    durationRef.current = newDuration;
-    dispatch({ type: actionTypes.SET_DURATION, payload: { newDuration } });
   }, []);
 
   React.useEffect(() => {
