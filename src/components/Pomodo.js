@@ -97,7 +97,11 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
         <button onClick={operate}>
           {!isEverStarted ? "START" : isRunning ? "PAUSE" : "CONTINUE"}
         </button>
-        {isEverStarted ? <button onClick={handleStop}>STOP</button> : null}
+        {isEverStarted || isBreak ? (
+          <button onClick={handleStop}>
+            {isBreak ? "Cancel Break" : "STOP"}
+          </button>
+        ) : null}
       </div>
       <div>{completedTasks}</div>
       <PomodoSettings intervals={intervals} onSubmit={changeIntervals} />
