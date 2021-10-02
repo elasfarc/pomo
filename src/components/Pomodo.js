@@ -81,6 +81,11 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
     dispatch({ type: "changeIntervals", payload: updatedIntervals });
   }, []);
 
+  const handleStop = () => {
+    if (isBreak) dispatch({ type: "changeMood" });
+    restart();
+  };
+
   return (
     <div className="container txt-center border-white">
       <div className="timer__display">
@@ -92,7 +97,7 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
         <button onClick={operate}>
           {!isEverStarted ? "START" : isRunning ? "PAUSE" : "CONTINUE"}
         </button>
-        {isEverStarted ? <button onClick={restart}>STOP</button> : null}
+        {isEverStarted ? <button onClick={handleStop}>STOP</button> : null}
       </div>
       <div>{completedTasks}</div>
       <PomodoSettings intervals={intervals} onSubmit={changeIntervals} />

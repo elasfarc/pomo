@@ -15,7 +15,7 @@ const useTimer = ({ duration = 0 }) => {
           duration: state.duration === 0 ? state.duration : state.duration - 1,
           isRunning: state.duration - 1 === 0 ? false : true,
           isDone: state.duration - 1 === 0 ? true : false,
-          isEverStarted: true,
+          isEverStarted: state.duration - 1 === 0 ? false : true,
         };
       case actionTypes.RESTART:
         return { ...state, ...initialState };
