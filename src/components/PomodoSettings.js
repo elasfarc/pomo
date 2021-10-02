@@ -1,17 +1,18 @@
 import React from "react";
+
 export default function PomodoSettings({ intervals, onSubmit }) {
   const [formState, setFormState] = React.useState(intervals);
-  console.log(
-    "🚀 ~ file: PomodoSettings.js ~ line 4 ~ PomodoSettings ~ formState",
-    formState
-  );
   const handleChange = (e) => {
     setFormState((formState) => ({
       ...formState,
       [e.target.name]: Number(e.target.value),
     }));
-    onSubmit(formState);
   };
+  const { focus, longBreak, shortBreak } = intervals;
+  React.useEffect(() => {
+    onSubmit(formState);
+  }, [formState, onSubmit, focus, longBreak, shortBreak]);
+
   return (
     <div className="pomodo__settings">
       <form>
@@ -29,12 +30,14 @@ export default function PomodoSettings({ intervals, onSubmit }) {
               value={inputValue}
               onChange={handleChange}
             />
+
             <input
               id={inputName}
               name={inputName}
               type="number"
               value={inputValue}
               onChange={handleChange}
+              style={{ width: "10%", textAlign: "center" }}
             />
           </div>
         ))}

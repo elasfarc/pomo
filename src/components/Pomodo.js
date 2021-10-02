@@ -27,7 +27,7 @@ function pomodoReducer(state, action) {
     case "changeIntervals":
       return {
         ...state,
-        intervals: action.payload.updatedIntervals,
+        intervals: action.payload,
       };
 
     default:
@@ -45,7 +45,7 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
   const { intervals, completedTasks, isBreak } = settings;
 
   const {
-    state: { duration, isRunning, isDone },
+    state: { duration, isRunning, isDone, isEverStarted },
     operate,
     restart,
     setDuration,
@@ -58,7 +58,6 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
   );
 
   React.useEffect(() => {
-    if (!isDone) return;
     setDuration(
       !isBreak
         ? intervals.focus
@@ -72,7 +71,6 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
     intervals.longBreak,
     intervals.shortBreak,
     isBreak,
-    isDone,
     setDuration,
   ]);
 
@@ -80,7 +78,7 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
   const seconds = pipe(extractSeconds, formatTime);
 
   const changeIntervals = React.useCallback((updatedIntervals) => {
-    dispatch({ type: "changeIntervals", payload: { updatedIntervals } });
+    dispatch({ type: "changeIntervals", payload: updatedIntervals });
   }, []);
 
   return (
@@ -91,8 +89,10 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
         <span>{seconds(duration)}</span>
       </div>
       <div className="timer__control">
-        <button onClick={operate}>{isRunning ? "PAUSE" : "START"}</button>
-        <button onClick={restart}>STOP</button>
+        <button onClick={operate}>
+          {!isEverStarted ? "START" : isRunning ? "PAUSE" : "CONTINUE"}
+        </button>
+        {isEverStarted ? <button onClick={restart}>STOP</button> : null}
       </div>
       <div>{completedTasks}</div>
       <PomodoSettings intervals={intervals} onSubmit={changeIntervals} />

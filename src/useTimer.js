@@ -15,6 +15,7 @@ const useTimer = ({ duration = 0 }) => {
           duration: state.duration === 0 ? state.duration : state.duration - 1,
           isRunning: state.duration - 1 === 0 ? false : true,
           isDone: state.duration - 1 === 0 ? true : false,
+          isEverStarted: true,
         };
       case actionTypes.RESTART:
         return { ...state, ...initialState };
@@ -35,7 +36,8 @@ const useTimer = ({ duration = 0 }) => {
   const initialState = {
     duration: durationRef.current,
     isRunning: false,
-    isDone: true,
+    isDone: false,
+    isEverStarted: false,
   };
   const [state, dispatch] = React.useReducer(timerReducer, initialState);
   const intervalRef = React.useRef();
@@ -51,14 +53,19 @@ const useTimer = ({ duration = 0 }) => {
       );
   }, [state.isRunning]);
 
-  const setDuration = React.useCallback((newDuration) => {
-    newDuration = newDuration * 60;
-    durationRef.current = newDuration;
-    dispatch({
-      type: actionTypes.SET_DURATION,
-      payload: { newDuration },
-    });
-  }, []);
+  const setDuration = React.useCallback(
+    (newDuration) => {
+      newDuration = newDuration * 60;
+      durationRef.current = newDuration;
+      if (!state.isEverStarted) {
+        dispatch({
+          type: actionTypes.SET_DURATION,
+          payload: { newDuration },
+        });
+      }
+    },
+    [state.isEverStarted]
+  );
 
   const restart = React.useCallback(() => {
     clearInterval(intervalRef.current);
