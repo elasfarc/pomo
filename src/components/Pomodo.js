@@ -46,7 +46,8 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
 
   const {
     state: { duration, isRunning, isDone, isEverStarted },
-    operate,
+    run,
+    pause,
     restart,
     setDuration,
   } = useTimer({ duration: intervals.focus });
@@ -94,7 +95,7 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
         <span>{seconds(duration)}</span>
       </div>
       <div className="timer__control">
-        <button onClick={operate}>
+        <button onClick={isRunning ? pause : run}>
           {!isEverStarted ? "START" : isRunning ? "PAUSE" : "CONTINUE"}
         </button>
         {isEverStarted || isBreak ? (

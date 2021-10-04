@@ -42,16 +42,17 @@ const useTimer = ({ duration = 0 }) => {
   const [state, dispatch] = React.useReducer(timerReducer, initialState);
   const intervalRef = React.useRef();
 
-  const operate = React.useCallback(() => {
-    if (state.isRunning) {
-      clearInterval(intervalRef.current);
-      dispatch({ type: actionTypes.PAUSE });
-    } else
-      intervalRef.current = setInterval(
-        () => dispatch({ type: actionTypes.RUN }),
-        1000
-      );
-  }, [state.isRunning]);
+  const run = React.useCallback(() => {
+    intervalRef.current = setInterval(
+      () => dispatch({ type: actionTypes.RUN }),
+      1000
+    );
+  }, []);
+
+  const pause = React.useCallback(() => {
+    clearInterval(intervalRef.current);
+    dispatch({ type: actionTypes.PAUSE });
+  }, []);
 
   const setDuration = React.useCallback(
     (newDuration) => {
@@ -77,7 +78,7 @@ const useTimer = ({ duration = 0 }) => {
     if (state.isDone) clearInterval(intervalRef.current);
   }, [state.isDone]);
   console.log("🚀 ~ file: useTimer.js ~ line 50 ~ useTimer ~ state", state);
-  return { state, dispatch, operate, restart, setDuration };
+  return { state, dispatch, run, pause, restart, setDuration };
 };
 
 export { useTimer };
