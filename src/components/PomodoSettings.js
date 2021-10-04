@@ -11,7 +11,8 @@ export default function PomodoSettings({ settings, onSubmit }) {
           ? !formState.autoStart
           : {
               ...formState.intervals,
-              [name]: Number(value),
+              [name]:
+                Number(value) > 0 ? Number(value) : formState.intervals[name],
             },
     }));
   };
