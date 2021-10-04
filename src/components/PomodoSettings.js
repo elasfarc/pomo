@@ -1,14 +1,22 @@
 import React from "react";
 
-export default function PomodoSettings({ intervals, onSubmit }) {
-  const [formState, setFormState] = React.useState(intervals);
+export default function PomodoSettings({ settings, onSubmit }) {
+  const [formState, setFormState] = React.useState(settings);
   const handleChange = (e) => {
+    const { type, name, value } = e.target;
     setFormState((formState) => ({
       ...formState,
-      [e.target.name]: Number(e.target.value),
+      [type === "checkbox" ? "autoStart" : "intervals"]:
+        type === "checkbox"
+          ? !formState.autoStart
+          : {
+              ...formState.intervals,
+              [name]: Number(value),
+            },
     }));
   };
-  const { focus, longBreak, shortBreak } = intervals;
+  const { focus, longBreak, shortBreak, autoStart } = formState;
+
   React.useEffect(() => {
     onSubmit(formState);
   }, [formState, onSubmit, focus, longBreak, shortBreak]);
@@ -16,7 +24,7 @@ export default function PomodoSettings({ intervals, onSubmit }) {
   return (
     <div className="pomodo__settings">
       <form>
-        {Object.entries(formState).map(([inputName, inputValue]) => (
+        {Object.entries(formState.intervals).map(([inputName, inputValue]) => (
           <div key={inputName}>
             <label
               htmlFor={inputName}
@@ -41,6 +49,8 @@ export default function PomodoSettings({ intervals, onSubmit }) {
             />
           </div>
         ))}
+        <label>Auto-start timer</label>
+        <input type="checkbox" checked={autoStart} onChange={handleChange} />
       </form>
     </div>
   );

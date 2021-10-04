@@ -24,11 +24,9 @@ function pomodoReducer(state, action) {
           : state.completedTasks + 1,
         isBreak: !state.isBreak,
       };
-    case "changeIntervals":
-      return {
-        ...state,
-        intervals: action.payload,
-      };
+    case "changeSettings":
+      const { intervals, autoStart } = action.payload;
+      return { ...state, intervals, autoStart };
 
     default:
       throw new Error("unknown pomodoReducer action type...");
@@ -40,9 +38,10 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
     isBreak: false,
     completedTasks: 0,
     intervals: { focus: t1, shortBreak: t2, longBreak: t3 },
+    autoStart: false,
   };
   const [settings, dispatch] = React.useReducer(pomodoReducer, pomodoSettings);
-  const { intervals, completedTasks, isBreak } = settings;
+  const { intervals, completedTasks, isBreak, autoStart } = settings;
 
   const {
     state: { duration, isRunning, isDone, isEverStarted },
@@ -58,28 +57,34 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
     }, [isDone])
   );
 
-  React.useEffect(() => {
-    setDuration(
-      !isBreak
-        ? intervals.focus
-        : completedTasks % 4 === 0
-        ? intervals.longBreak
-        : intervals.shortBreak
-    );
-  }, [
-    completedTasks,
-    intervals.focus,
-    intervals.longBreak,
-    intervals.shortBreak,
-    isBreak,
-    setDuration,
-  ]);
+  useDidMountEffect(
+    React.useCallback(() => {
+      setDuration(
+        !isBreak
+          ? intervals.focus
+          : completedTasks % 4 === 0
+          ? intervals.longBreak
+          : intervals.shortBreak
+      );
+      if (autoStart && isDone) run();
+    }, [
+      completedTasks,
+      intervals.focus,
+      intervals.longBreak,
+      intervals.shortBreak,
+      isBreak,
+      isDone,
+      run,
+      setDuration,
+      autoStart,
+    ])
+  );
 
   const minutes = pipe(extractMinutes, formatTime);
   const seconds = pipe(extractSeconds, formatTime);
 
-  const changeIntervals = React.useCallback((updatedIntervals) => {
-    dispatch({ type: "changeIntervals", payload: updatedIntervals });
+  const changeSettings = React.useCallback((updatedSettings) => {
+    dispatch({ type: "changeSettings", payload: updatedSettings });
   }, []);
 
   const handleStop = () => {
@@ -105,7 +110,10 @@ const Pomodo = ({ t1 = 25, t2 = 5, t3 = 15 }) => {
         ) : null}
       </div>
       <div>{completedTasks}</div>
-      <PomodoSettings intervals={intervals} onSubmit={changeIntervals} />
+      <PomodoSettings
+        settings={{ intervals, autoStart }}
+        onSubmit={changeSettings}
+      />
     </div>
   );
 };
