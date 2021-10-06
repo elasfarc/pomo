@@ -16,11 +16,11 @@ export default function PomodoSettings({ settings, onSubmit }) {
             },
     }));
   };
-  const { focus, longBreak, shortBreak, autoStart } = formState;
+  const { autoStart } = formState;
 
   React.useEffect(() => {
     onSubmit(formState);
-  }, [formState, onSubmit, focus, longBreak, shortBreak]);
+  }, [formState, onSubmit]);
 
   return (
     <div className="pomodo__settings">
